@@ -51,34 +51,34 @@ contract Fetch is Ownable {
   }
 
   // deposit only ETH
-  function deposit(bool _isClaimAbleStake) external payable {
+  function deposit() external payable {
     require(msg.value > 0, "zerro eth");
     // swap ETH
     swapETHInput(msg.value);
     // deposit and stake
-    _depositFor(_isClaimAbleStake, msg.sender);
+    _depositFor(msg.sender);
   }
 
   // deposit only ETH for a certain address
-  function depositFor(bool _isClaimAbleStake, address receiver) external payable {
+  function depositFor(address receiver) external payable {
     require(msg.value > 0, "zerro eth");
     // swap ETH
     swapETHInput(msg.value);
     // deposit and stake
-    _depositFor(_isClaimAbleStake, receiver);
+    _depositFor(receiver);
   }
 
   // deposit ETH and token without convert
-  function depositETHAndERC20(bool _isClaimAbleStake, uint256 tokenAmount) external payable {
+  function depositETHAndERC20(uint256 tokenAmount) external payable {
     IERC20(token).safeTransferFrom(msg.sender, address(this), tokenAmount);
     // deposit and stake
-    _depositFor(_isClaimAbleStake, msg.sender);
+    _depositFor(msg.sender);
   }
 
   /**
   * @dev convert deposited ETH into pool and then stake
   */
-  function _depositFor(bool _isClaimAbleStake, address receiver) internal {
+  function _depositFor(address receiver) internal {
     // check if token received
     uint256 tokenReceived = IERC20(token).balanceOf(address(this));
     uint256 ethBalance = address(this).balance;
@@ -184,7 +184,7 @@ contract Fetch is Ownable {
  }
 
  /**
- * @dev allow owner enable/disable burn 
+ * @dev allow owner enable/disable burn
  */
  function updateBurnStatus(bool _status) external onlyOwner {
    isBurnable = _status;

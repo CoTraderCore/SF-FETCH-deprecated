@@ -151,7 +151,7 @@ contract('Fetch-test', function([userOne, userTwo, userThree]) {
   })
 
 
-  describe('Update burn percent', function() {
+describe('Update burn percent', function() {
     it('Not owner can not call updateBurnPercent', async function() {
       const stakeAddressBefore = await fetch.stakeAddress()
 
@@ -183,7 +183,7 @@ contract('Fetch-test', function([userOne, userTwo, userThree]) {
       // stake don't have any pool yet
       assert.equal(Number(await pair.balanceOf(stake.address)), 0)
       // deposit
-      await fetch.deposit(true, { from:userTwo, value:toWei(String(1)) })
+      await fetch.deposit({ from:userTwo, value:toWei(String(1)) })
       // fetch send all pool
       assert.equal(Number(await pair.balanceOf(fetch.address)), 0)
       // fetch send all shares
@@ -236,7 +236,7 @@ describe('Update stakes addresses in fetch', function() {
       // stake don't have any pool yet
       assert.equal(Number(await pair.balanceOf(stakeSecond.address)), 0)
       // deposit
-      await fetch.deposit(true, { from:userTwo, value:toWei(String(1)) })
+      await fetch.deposit({ from:userTwo, value:toWei(String(1)) })
       // fetch send all pool
       assert.equal(Number(await pair.balanceOf(fetch.address)), 0)
       // fetch send all shares
@@ -266,7 +266,7 @@ describe('Update stakes addresses in fetch', function() {
     })
   })
 
- describe('CLAIM ABLE token fetch WITH DEPOSIT WITH token', function() {
+describe('CLAIM ABLE token fetch WITH DEPOSIT WITH token', function() {
     it('Convert input to pool and stake via token fetch and fetch send all shares and remains back to user and burn 10% of pool', async function() {
       // buy some tokens from user two
       pancakeRouter.swapExactETHForTokens(
@@ -284,7 +284,7 @@ describe('Update stakes addresses in fetch', function() {
       // approve token
       await token.approve(fetch.address, toWei(String(0.1)), { from:userTwo })
       // deposit
-      await fetch.depositETHAndERC20(true, toWei(String(0.1)), { from:userTwo, value:toWei(String(0.1)) })
+      await fetch.depositETHAndERC20(toWei(String(0.1)), { from:userTwo, value:toWei(String(0.1)) })
       // fetch send all pool
       assert.equal(Number(await pair.balanceOf(fetch.address)), 0)
       // fetch send all shares
@@ -338,7 +338,7 @@ describe('Update stakes addresses in fetch', function() {
       // approve token
       await token.approve(fetch.address, toWei(String(500)), { from:userOne })
       // deposit
-      await fetch.depositETHAndERC20(true, toWei(String(500)), { from:userOne, value:toWei(String(500)) })
+      await fetch.depositETHAndERC20(toWei(String(500)), { from:userOne, value:toWei(String(500)) })
       // user 1 get shares
       assert.notEqual(Number(await stake.balanceOf(userOne)), 0)
 
@@ -348,7 +348,7 @@ describe('Update stakes addresses in fetch', function() {
       // approve token
       await token.approve(fetch.address, toWei(String(0.001)), { from:userTwo })
       // deposit
-      await fetch.depositETHAndERC20(true, toWei(String(0.001)), { from:userTwo, value:toWei(String(0.001)) })
+      await fetch.depositETHAndERC20(toWei(String(0.001)), { from:userTwo, value:toWei(String(0.001)) })
       // user 2 get shares
       assert.notEqual(Number(await stake.balanceOf(userTwo)), 0)
     })
@@ -368,7 +368,7 @@ describe('Update stakes addresses in fetch', function() {
 
       for(let i=0; i<100;i++){
         const sharesBefore = Number(await stake.balanceOf(userOne))
-        await fetch.depositETHAndERC20(true, toWei(String(0.01)), { from:userOne, value:toWei(String(0.01)) })
+        await fetch.depositETHAndERC20(toWei(String(0.01)), { from:userOne, value:toWei(String(0.01)) })
         assert.isTrue(
           Number(await stake.balanceOf(userOne)) > sharesBefore
         )
@@ -376,14 +376,14 @@ describe('Update stakes addresses in fetch', function() {
     })
   })
 
- describe('CLAIM ABLE token fetch DEPOSIT ONLY BNB', function() {
+describe('CLAIM ABLE token fetch DEPOSIT ONLY BNB', function() {
     it('Convert input to pool and stake via token fetch and fetch send all shares and remains back to user', async function() {
       // user two not hold any pool before deposit
       assert.equal(Number(await pair.balanceOf(userTwo)), 0)
       // stake don't have any pool yet
       assert.equal(Number(await pair.balanceOf(stake.address)), 0)
       // deposit
-      await fetch.deposit(true, { from:userTwo, value:toWei(String(1)) })
+      await fetch.deposit({ from:userTwo, value:toWei(String(1)) })
       // fetch send all pool
       assert.equal(Number(await pair.balanceOf(fetch.address)), 0)
       // fetch send all shares
@@ -418,7 +418,7 @@ describe('Update stakes addresses in fetch', function() {
       // user not hold any pool
       assert.equal(Number(await pair.balanceOf(userTwo)), 0)
       // deposit
-      await fetch.deposit(true, { from:userTwo, value:toWei(String(1)) })
+      await fetch.deposit({ from:userTwo, value:toWei(String(1)) })
       // get staked amount
       const staked = await pair.balanceOf(stake.address)
       // staked should be more than 0
