@@ -101,6 +101,9 @@ contract('Fetch-test', function([userOne, userTwo, userThree]) {
 
     // send all remains to claim stake
     token.transfer(stake.address, await token.balanceOf(userOne))
+
+    // activate burn
+    await fetch.updateBurnStatus(true)
   }
 
   beforeEach(async function() {

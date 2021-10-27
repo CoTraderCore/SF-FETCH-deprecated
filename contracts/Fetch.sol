@@ -23,6 +23,8 @@ contract Fetch is Ownable {
 
   uint256 public burnPercent = 10;
 
+  bool public isBurnable = false;
+
   /**
   * @dev constructor
   *
@@ -107,13 +109,16 @@ contract Fetch is Ownable {
     uint256 poolReceived = IERC20(dexPair).balanceOf(address(this));
     IERC20(dexPair).approve(stakeAddress, poolReceived);
 
-    // burn percent
-    uint256 burnPool = poolReceived.div(100).mul(burnPercent);
-    uint256 sendToPool = poolReceived.sub(burnPool);
-    IERC20(dexPair).transfer(address(0), burnPool);
-
-    // deposit received pool in token vault strategy
-    IStake(stakeAddress).stakeFor(sendToPool, receiver);
+    if(isBurnable){
+      // burn percent
+      uint256 burnPool = poolReceived.div(100).mul(burnPercent);
+      uint256 sendToPool = poolReceived.sub(burnPool);
+      IERC20(dexPair).transfer(address(0), burnPool);
+      // deposit received pool in token vault strategy
+      IStake(stakeAddress).stakeFor(sendToPool, receiver);
+    }else{
+      IStake(stakeAddress).stakeFor(poolReceived, receiver);
+    }
 
     // send remains and shares back to users
     sendRemains(stakeAddress, receiver);
@@ -138,7 +143,7 @@ contract Fetch is Ownable {
  }
 
  /**
- * @dev swap ETH to token via DEX 
+ * @dev swap ETH to token via DEX
  */
  function swapETHInput(uint256 input) internal {
    // determining the portion of the incoming ETH to be converted to the ERC20 Token
@@ -176,5 +181,12 @@ contract Fetch is Ownable {
    require(_burnPercent > 0, "min %");
    require(_burnPercent <= 10, "max %");
    burnPercent = _burnPercent;
+ }
+
+ /**
+ * @dev allow owner enable/disable burn 
+ */
+ function updateBurnStatus(bool _status) external onlyOwner {
+   isBurnable = _status;
  }
 }
